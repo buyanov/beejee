@@ -133,3 +133,4 @@ fabric.properties
 # Embedded web-server pid file
 /.web-server-pid
 
+db.sqlite

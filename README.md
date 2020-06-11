@@ -15,8 +15,9 @@ This is just a test task.
     
 ## Installation
 
-    git clone buyanov/beejee
-    composer install
+    git clone git@github.com:buyanov/beejee.git
+    curl -sS https://getcomposer.org/installer | php --
+    ./composer.phar install
     ./vendor/bin/doctrine orm:schema-tool:create
 
 ## Code style
