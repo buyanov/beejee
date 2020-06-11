@@ -2,9 +2,9 @@
 
 use DI\ContainerBuilder;
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $builder = new ContainerBuilder();
-$builder->addDefinitions('../config/di.php');
+$builder->addDefinitions(__DIR__ . '/../config/di.php');
 
 $container = $builder->build();

@@ -5,6 +5,7 @@ use Doctrine\ORM\Tools\Setup;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Environment;
 use TaskManager\Application;
 use Twig\Loader\FilesystemLoader;
@@ -35,11 +36,15 @@ return [
 
     'db.entity_manager' => DI\get(EntityManager::class),
 
-    Application::class => static function(ContainerInterface $container) {
+    'response' => DI\create(Response::class),
+    'request' => static function() {
         Request::enableHttpMethodParameterOverride();
-        $request = Request::createFromGlobals();
-        $response = new Response();
-        return new Application($request, $response, $container);
+        return Request::createFromGlobals();
+    },
+
+    Application::class => static function(ContainerInterface $container) {
+        Application::setContainer($container);
+        return Application::getInstance();
     },
 
     'app' => DI\get(Application::class),
@@ -49,4 +54,8 @@ return [
         return new Environment($loader);
     },
 
+    'twig' => DI\Get(Environment::class),
+
+    Session::class => DI\create(Session::class),
+    'session' => DI\get(Session::class)
 ];

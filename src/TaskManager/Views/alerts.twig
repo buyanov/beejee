@@ -1,0 +1,9 @@
+<div class="my-4">
+    {% for bag, alert in alerts() %}
+        {% for message in alert %}
+            <div class="alert alert-{{ bag }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>

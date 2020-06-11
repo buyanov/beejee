@@ -1,0 +1,107 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <form method="post" action="{{ action }}" enctype="application/x-www-form-urlencoded">
+                <div class="form-group">
+                    <label for="InputUsername">Username</label>
+                    <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            id="InputUsername"
+                            value="{{ form.data.username }}"
+                            placeholder="Enter name"
+                    />
+                    {% if form.errors.username is defined %}
+                        <small class="text-danger">{{ form.errors.username.0 }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="InputEmail">Email address</label>
+                    <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            id="InputEmail"
+                            aria-describedby="emailHelp"
+                            value="{{ form.data.email }}"
+                            placeholder="Enter email"
+                    />
+                    {% if form.errors.email is defined %}
+                        <small class="text-danger">{{ form.errors.email.0 }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="InputDescription">Description</label>
+                    <textarea
+                            rows="10"
+                            class="form-control"
+                            name="description"
+                            id="InputDescription"
+                    >{{ form.data.description }}</textarea>
+                    {% if form.errors.description is defined %}
+                        <small class="text-danger">{{ form.errors.description.0 }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="InputStatus">Status</label>
+                    <input
+                            type="text"
+                            name="status"
+                            class="form-control"
+                            id="InputStatus"
+                            placeholder="Enter status"
+                            value="{{ form.data.status }}"
+                    />
+                </div>
+                {% if auth() and form.data.id %}
+                    <div class="form-check mb-4">
+                        <input
+                                type="checkbox"
+                                name="completed"
+                                class="form-check-input"
+                                id="isComplete"
+                                {% if form.data.completed %} checked {% endif %}
+                        >
+
+                        <label class="form-check-label" for="isComplete">Complete</label>
+                    </div>
+                {% endif %}
+                {% if form.data.id %}
+                    <button type="submit" class="btn btn-primary">Save task</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary">Create task</button>
+                {% endif %}
+                <input type="hidden" name="id" value="{{ form.data.id }}">
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+    jQuery().ready(function () {
+        let isCompleteCheckBox = $('#isComplete');
+        if (isCompleteCheckBox.length !== 0) {
+            isCompleteCheckBox.on('click', function (e) {
+                isCompleteCheckBox.hide();
+                $.ajax({
+                    url: '/task/{{ form.data.id }}/complete',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'isCompleted': isCompleteCheckBox.is(':checked')
+                    }
+                }).done(function() {
+                    isCompleteCheckBox.show();
+                })
+            })
+        }
+    })
+</script>
+{% endblock %}

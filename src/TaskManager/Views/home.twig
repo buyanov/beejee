@@ -1,0 +1,58 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+
+            <div class="mb-4">
+                <p>sort by name <a href="/page-{{ page }}/sort-{{ sort }}">{{ sort }}</a></p>
+            </div>
+            <ul class="list-group mb-4">
+
+                {% for task in tasks %}
+                    <li class="list-group-item {% if task.approved %} list-group-item-info {% endif %}">
+
+                        <div class="d-block mb-2">
+                            <h5 class="description mb-0 d-flex justify-content-between">
+                                {{ task.username }}
+                                <small class="text-muted">{{ task.email }}</small>
+                            </h5>
+                            <small>{{ task.created|date("d.m.Y h:i:s") }}</small>
+                        </div>
+                        <div class="mb-2">
+                            {% if task.completed %}
+                                <span class="badge badge-success badge-pill">Done</span>
+                            {% else %}
+                                {% if task.status %}
+                                    <span class="badge badge-primary badge-pill">
+                                        {{ task.status }}
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                            {% if task.approved %}
+                                <span class="badge badge-warning badge-pill">
+                                    Approved by administrator
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <p>{{ task.description }}</p>
+
+                        <div class="d-flex flex-row-reverse">
+                            <a href="/task/{{ task.id }}" class="button button-link">Edit</a>
+                        </div>
+                    </li>
+                {% endfor %}
+
+            </ul>
+
+            {% include 'pagination.twig' with {
+                currentPage: page,
+                lastPage: totalPages,
+                paginationPath: '/page-'
+            } only %}
+        </div>
+    </div>
+
+{% endblock %}
